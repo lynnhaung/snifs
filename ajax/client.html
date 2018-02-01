@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <script src="jQuery3.3.1.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+
+  </head>
+  <body>
+      <input type="text" id="user_account" />
+<input type="button" id="getUser" value="Get Details"/>
+    <script>
+
+  $(document).ready(function () 
+  {
+    $("#getUser").on('click',function(){
+var user_account = $('#user_account').val();
+/*阿貴的版本---ok
+       var user_post_id = {
+            user_post_id: user_post_id
+       };
+
+        $.post('./api.php', user_post_id, function (result, status, xhr) {
+       
+       // var obj = JSON.parse(result);
+        
+        //資料處理
+        console.log(result);
+      var obj = JSON.parse(result);
+       user_account = obj[0];
+       
+        console.log(user_account);   
+       //user_account = obj[1];
+          
+       });
+------ok*/
+    $.ajax({
+      type: 'POST',
+      url: 'api.php',  //the script to call to get data 
+      dataType: "json",     //data format 
+      data: {user_account: user_account},    
+
+      success: function(data)    //on recieve of reply
+      {
+       if(data.status == 'ok')
+        {
+    $('#userAccount').text(data.result.user_account);
+        $('#userSource').text(data.result.source);
+        $('#userWords').text(data.result.words);
+        $('#userTag').text(data.result.tag);
+        $('.user-content').slideDown();
+        
+          }
+        else if (data.status == 'err'){
+                $('.user-content').slideUp();
+                alert("User not found...");
+            } 
+            },
+        error: function(xhr, ajaxOptions, thrownError) {
+            console.log(xhr.responseText);
+        }
+        
+        });
+    });
+});
+
+  </script>
+
+<div class="user-content" style="display: none;">
+    <h4>User Details</h4>
+    <p>Account: <span id="userAccount"></span></p>
+    <p>Source: <span id="userSource"></span></p>
+    <p>Words: <span id="userWords"></span></p>
+    <p>Tag: <span id="userTag"></span></p>
+</div>
+
+
+  </body>
+</html>
