@@ -33,6 +33,7 @@ var user_account = $('#user_account').val();
           
        });
 ------ok*/
+
     $.ajax({
       type: 'POST',
       url: 'api.php',  //the script to call to get data 
@@ -41,20 +42,35 @@ var user_account = $('#user_account').val();
 
       success: function(data)    //on recieve of reply
       {
-       if(data.status == 'ok')
-        {
-    $('#userAccount').text(data.result.user_account);
-        $('#userSource').text(data.result.source);
-        $('#userWords').text(data.result.words);
-        $('#userTag').text(data.result.tag);
-        $('.user-content').slideDown();
-        
+/*志帆建議抓取多行的顯示方法          
+          console.log(data);
+          console.log(JSON.parse(data));
+          var json_obj = JSON.parse(data);
+          for (){
+              var xxx.push(json_obj['xxx']);
+              var yyy.push(json_obj['yyy']);
           }
-        else if (data.status == 'err'){
+*/
+        var len = data.length;
+        $('#userWords').empty();
+//        console.log(len);
+    for(var i = 0; i < len; i++){
+//       if(data.status != 'err')
+//        {
+    $('#userAmount').text(len);
+    $('#userAccount').text(data[i].user_account);
+        $('#userSource').text(data[i].source);
+        $('#userWords').append(data[i].words,',');
+        $('#userTag').text(data[i].tag);
+        $('.user-content').slideDown();
+          }
+        if (data.status == 'err'){
                 $('.user-content').slideUp();
                 alert("User not found...");
             } 
-            },
+//    }
+          
+    },
         error: function(xhr, ajaxOptions, thrownError) {
             console.log(xhr.responseText);
         }
@@ -65,8 +81,10 @@ var user_account = $('#user_account').val();
 
   </script>
 
-<div class="user-content" style="display: none;">
+<!--<div class="user-content">-->
+    <div class="user-content" style="display: none;">
     <h4>User Details</h4>
+    <p>Amount: <span id="userAmount"></span></p>
     <p>Account: <span id="userAccount"></span></p>
     <p>Source: <span id="userSource"></span></p>
     <p>Words: <span id="userWords"></span></p>
