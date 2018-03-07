@@ -29,7 +29,7 @@ function init(){
      // define the node's text
      $(go.TextBlock,
          {margin: 5, font: "bold 11px Helvetica, bold Arial, sans-serif"},
-         new go.Binding("text","key"))// TextBlock.text is bound to Node.data.keyword
+         new go.Binding("text","key"))// TextBlock.text is bound to Node.data.key
      );
     //define the Link template
     myDiagram.linkTemplate =
