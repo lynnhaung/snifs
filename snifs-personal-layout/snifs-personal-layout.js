@@ -41,12 +41,30 @@ function init(){
         new go.Binding("stroke","line_color"),
         new go.Binding("strokeWidth","line_width"),),
      );
+     //define the Click Listener template
+     myDiagram.addDiagramListener("ObjectSingleClicked",
+      function(e) {
+        var part = e.subject.part;
+        if (!(part instanceof go.Link))
+        {
+        // alert("Clicked on " + part.data.key);
+        document.getElementById("inputEventsMsg").style.display = "block";
 
+        }
+      });
      //Nodes' array
      var p_node =[];
      var inwords =["討論","核能","污染","輻射","污水","嗨嗨","測試","加油"];
      var students = ["A5","B5","C3","C5","D5","D4","C4","D1","D2","C1","D3","A4","A2","A1","A3","B1","B4","B2","C2","B3"];
      var outwords = ["太陽能","水力","火力","風力","再生能源","地熱","生質能","核廢料","發電廠","電費","產能","度電","鈾235","燃料"];
+
+     var outwords_data = [
+         {
+             key: "solar enery",
+             color: "#fff5566"
+         },
+
+     ];
      //new varible to control properties
      var border_color, border_width, inborder_color, inborder_width, color, outborder_color, outborder_width;
      //for loop to add values
@@ -188,3 +206,7 @@ function TripleCircleLayout(diagram) {
     });
     return set;
  }
+
+ function showMessage(s) {
+     document.getElementById("inputEventsMsg").textContent = s;
+   }

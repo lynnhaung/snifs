@@ -17,6 +17,15 @@ div{
     height: 500px;
     position: relative;
 }
+#inputEventsMsg{
+    width: 480px;
+    height: 600px;
+    display: none;
+}
 footer{
 
+}
+
+canvas{
+    margin-left: -224px;
 }
