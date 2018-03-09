@@ -13,19 +13,22 @@ div{
 #myDiagramDiv{
     background-color: white;
     border: 1px solid black;
-    width: 100%;
+    width: 40%;
     height: 500px;
     position: relative;
+    float:left;
 }
 #inputEventsMsg{
-    width: 480px;
-    height: 600px;
-    display: none;
+    width: 30%;
+    height: 500px;
+    /* border: 1px solid black; */
+     display: none; 
+    float:left;
 }
 footer{
 
 }
-
-canvas{
+/* canvas{
     margin-left: -224px;
-}
+    width:58%
+} */
