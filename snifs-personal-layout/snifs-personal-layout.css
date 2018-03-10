@@ -16,14 +16,14 @@ div{
     width: 40%;
     height: 500px;
     position: relative;
-    float:left;
+    float:left; /* two div in a row*/
 }
 #inputEventsMsg{
     width: 30%;
     height: 500px;
     /* border: 1px solid black; */
-     display: none; 
-    float:left;
+    display: none;
+    float:left; /* two div in a row*/
 }
 footer{
 

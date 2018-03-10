@@ -1,5 +1,4 @@
 /*data section*/
-
     //define color variable
     var A_blue = "#2185d0";
     var B_yellow = "#fbbd08";
@@ -103,12 +102,15 @@
         {from: "A5", to: "太陽能", line_color: A_blue},
         {from: "A4", to: "嗨嗨", line_color: A_blue},
     ]
-
+    //define table json
+    var myList =
+    [
+         { "詞彙": '<a href="">討論</a>', "次數": "3"},
+         { "詞彙": '<a href="">輻射</a>', "次數": "2"},
+         { "詞彙": '<a href="">太陽能</a>', "次數": "1"},
+    ]
 /*logic section*/
 function init(){
-    // $(document).ready(function(){
-    //         $("inputEventsMsg").show();
-    //     });
     // for conciseness in defining templates in this function
     var $ = go.GraphObject.make; //to build GoJS objects
     // create a Diagram for the DIV HTML element
@@ -153,24 +155,22 @@ function init(){
         new go.Binding("stroke","line_color"),
         new go.Binding("strokeWidth","line_width"),),
      );
+
      //define the Click Listener template
      myDiagram.addDiagramListener("ObjectSingleClicked",
       function(e) {
         var part = e.subject.part;
+
         if (!(part instanceof go.Link))
         {
-        if(part.data.key == "A5" )
+
+        if(part.data.key == "A5")
         {
-            if(document.getElementById("inputEventsMsg").style.display != "block")
-            document.getElementById("inputEventsMsg").style.display = "block";
-            else
-            document.getElementById("inputEventsMsg").style.display = "none";
+            displaytable();
         }
-        //Clik("Clicked on " + part.data.key);
-        else if (part.data.key == "太陽能" )
+
+        else
         alert("Clicked on " + part.data.key);
-         // alert("Clicked on " + part.data.key);
-        //document.getElementById("inputEventsMsg").style.display = "block";
 
         }
       });
@@ -200,6 +200,7 @@ function init(){
      myDiagram.model = new go.GraphLinksModel(p_node,p_link);
 
      TripleCircleLayout(myDiagram);
+     Bindhtmltable(myList);
 }
 //functions
 function TripleCircleLayout(diagram) {
@@ -237,3 +238,41 @@ function TripleCircleLayout(diagram) {
  function showMessage(s) {
      document.getElementById("inputEventsMsg").textContent = s;
    }
+
+ function Bindhtmltable(list) {
+   var cols = addheadercols(list);
+   for (var i = 0; i < list.length; i++) {
+   var row = $('<tr/>');
+   for (var colIndex = 0; colIndex < cols.length; colIndex++) {
+   var cellValue = list[i][cols[colIndex]];
+   if (cellValue == null) { cellValue = ""; }
+   row.append($('<td/ style="text-align:center">').html(cellValue));
+   }
+   $("#htmltable").append(row);
+   }
+ }
+
+ function addheadercols(list) {
+    var colset = [];
+    var headerTr = $('<thead/>');
+    headerTr.append($('<th/ colspan="2" style="text-align:center">').html("A5(學生姓名)"));
+    headerTr.append($('<tr/>'));
+    for (var i = 0; i < list.length; i++) {
+    var rows = list[i];
+    for (var key in rows) {
+    if ($.inArray(key, colset) == -1) {
+    colset.push(key);
+    headerTr.append($('<th/ style="text-align:center">').html(key));
+    }
+    }
+    }
+    $("#htmltable").append(headerTr);
+    return colset;
+ }
+
+ function displaytable(){
+     if(document.getElementById("inputEventsMsg").style.display != "block")
+     document.getElementById("inputEventsMsg").style.display = "block";
+     else
+     document.getElementById("inputEventsMsg").style.display = "none";
+}
