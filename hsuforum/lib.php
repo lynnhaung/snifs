@@ -5743,7 +5743,7 @@ function hsuforum_print_latest_discussions($course, $forum, $maxdiscussions=-1, 
         if (!empty($displayformat)) {
             set_user_preference('hsuforum_displayformat', $displayformat);
         } else {
-            $displayformat = get_user_preferences('hsuforum_displayformat', 'header');
+            $displayformat = get_user_preferences('hsuforum_displayformat', 'article');
         }
         $showdisplayformat = true;
     }

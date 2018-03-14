@@ -13,7 +13,7 @@
     var p_node =[];
     var inwords =
     [
-        {key: "討論", border_color: Black, border_width: 3, color: "yellow"},
+        {key: "討論", border_color: Black, border_width: 3, color: "yellow",title: "123"},
         {key: "核能", border_color: C_green, border_width: 3},
         {key: "污染", border_color: D_red, border_width: 3},
         {key: "輻射", border_color: Black, border_width: 3, color: "yellow"},
@@ -76,6 +76,7 @@
         {from: "D5", to: "火力", line_color: D_red},
         {from: "D1", to: "輻射", line_color: D_red},
         {from: "C3", to: "核能", line_color: C_green},
+        {from: "C5", to: "核能", line_color: C_green},
         {from: "C3", to: "水力", line_color: C_green},
         {from: "C2", to: "燃料", line_color: C_green},
         {from: "C1", to: "核廢料", line_color: C_green},
@@ -105,7 +106,8 @@
     //define table json
     var myList =
     [
-         { "詞彙": '<a href="">討論</a>', "次數": "3"},
+        // http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?search=%E8%A8%8E%E8%AB%96&id=73
+         { "詞彙": '<a href="http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?search='+ encodeURI("討論")+'&id=73">討論</a>', "次數": "3"},
          { "詞彙": '<a href="">輻射</a>', "次數": "2"},
          { "詞彙": '<a href="">太陽能</a>', "次數": "1"},
     ]
@@ -137,6 +139,7 @@ function init(){
          new go.Binding("figure","figure"),
          new go.Binding("stroke","border_color"),
          new go.Binding("strokeWidth", "border_width"),
+         //new go.Binding("title","title")
      ),
      // define the node's text
      $(go.TextBlock,
@@ -169,8 +172,14 @@ function init(){
             displaytable();
         }
 
-        else
-        alert("Clicked on " + part.data.key);
+        else {
+             // alert("Clicked on " + part.data.title);
+            jQuery.getJSON("user_keywords_mock.json", function (user_keywords_list) {
+                alert("Clicked on " + user_keywords_list);
+            });
+
+        }
+
 
         }
       });
@@ -179,7 +188,7 @@ function init(){
      //inwords[]
      for(var i = 0; i < inwords.length; i++)
      {
-         p_node.push({layer: 1, key: inwords[i].key, border_color: inwords[i].border_color, border_width: inwords[i].border_width, figure: "RoundedRectangle", color: inwords[i].color });
+         p_node.push({layer: 1, key: inwords[i].key, border_color: inwords[i].border_color, border_width: inwords[i].border_width, figure: "RoundedRectangle", color: inwords[i].color, title: inwords[i].title });
      }
      //students[]
      for(var i = 0; i < students.length; i++)
