@@ -13,16 +13,16 @@ div{
 #myDiagramDiv{
     background-color: white;
     border: 1px solid black;
-    width: 40%;
-    height: 500px;
+    width: 45%;
+    height: 550px;
     position: relative;
     float:left; /* two div in a row*/
 }
 #inputEventsMsg{
-    width: 30%;
-    height: 500px;
+    width: 35%;
+    height: 550px;
     /* border: 1px solid black; */
-    display: none;
+    /* display: none; */
     float:left; /* two div in a row*/
 }
 footer{

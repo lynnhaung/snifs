@@ -4,10 +4,6 @@
     var B_yellow = "#fbbd08";
     var C_green = "#21ba45";
     var D_red = "#db2828";
-    // var A_blue = "rgb(39, 132, 254)";
-    // var B_yellow = "rgb(240, 162, 29)";
-    // var C_green = "rgb(52, 138, 30)";
-    // var D_red = "rgb(217, 31, 25)";
     var Black = "black";
     //define Node array
     var p_node =[];
@@ -24,25 +20,25 @@
     ];
     var students = [
         {key: "A5", color: A_blue, font_color: "black", border_color: "yellow",border_width: 6},
-        {key: "B5", color: B_yellow},
-        {key: "C3", color: C_green},
-        {key: "C5", color: C_green},
-        {key: "D5", color: D_red},
-        {key: "D4", color: D_red},
-        {key: "C4", color: C_green},
-        {key: "D1", color: D_red},
-        {key: "D2", color: D_red},
-        {key: "C1", color: C_green},
-        {key: "D3", color: D_red},
-        {key: "A4", color: A_blue},
-        {key: "A2", color: A_blue},
-        {key: "A1", color: A_blue},
-        {key: "A3", color: A_blue},
-        {key: "B1", color: B_yellow},
-        {key: "B4", color: B_yellow},
-        {key: "B2", color: B_yellow},
-        {key: "C2", color: C_green},
-        {key: "B3", color: B_yellow},
+        {key: "B5", color: B_yellow, border_color: B_yellow},
+        {key: "C3", color: C_green, border_color: C_green},
+        {key: "C5", color: C_green, border_color: C_green},
+        {key: "D5", color: D_red, border_color: D_red},
+        {key: "D4", color: D_red, border_color: D_red},
+        {key: "C4", color: C_green, border_color: C_green},
+        {key: "D1", color: D_red, border_color: D_red},
+        {key: "D2", color: D_red, border_color: D_red},
+        {key: "C1", color: C_green, border_color: C_green},
+        {key: "D3", color: D_red, border_color: D_red},
+        {key: "A4", color: A_blue, border_color: A_blue},
+        {key: "A2", color: A_blue, border_color: A_blue},
+        {key: "A1", color: A_blue, border_color: A_blue},
+        {key: "A3", color: A_blue, border_color: A_blue},
+        {key: "B1", color: B_yellow, border_color: B_yellow},
+        {key: "B4", color: B_yellow, border_color: B_yellow},
+        {key: "B2", color: B_yellow, border_color: B_yellow},
+        {key: "C2", color: C_green, border_color: C_green},
+        {key: "B3", color: B_yellow, border_color: B_yellow},
     ];
     var outwords =
     [
@@ -121,29 +117,47 @@ function init(){
             {
             // start everything in the middle of the viewport
             // center the content
-            initialContentAlignment: go.Spot.Right,
+            initialContentAlignment: go.Spot.Center,
             initialAutoScale: go.Diagram.Uniform,
             "animationManager.isEnabled": false,  //turn off automatic animations
             "undoManager.isEnabled": true,  // enable undo & redo
             // a Changed listener on the Diagram.model
             // "ModelChanged": function(e) { if (e.isTransactionFinished) saveModel(); }
+          //   click: function(e) {  // background click clears any remaining highlighteds
+          //   e.diagram.startTransaction("clear");
+          //   e.diagram.clearHighlighteds();
+          //   e.diagram.commitTransaction("clear");
+          // }
             });
     // define the Node template
     myDiagram.nodeTemplate =
     $(go.Node, "Auto",
-        {locationSpot: go.Spot.Center,},
+        {locationSpot: go.Spot.Center,
+
+        mouseEnter: function(e, node) {
+                node.diagram.clearHighlighteds();
+                node.linksConnected.each(function(l) { highlightLink(l, true); });
+                node.isHighlighted = true;
+              },
+              mouseLeave: function(e, node) {
+                node.diagram.clearHighlighteds();
+              }},  // defined below},
         $(go.Shape, "Circle",
         {fill: "white",
-         stroke: "#D8D8D8"},
+        },
          new go.Binding("fill","color"),// Shape.fill is bound to Node.data.color
          new go.Binding("figure","figure"),
          new go.Binding("stroke","border_color"),
-         new go.Binding("strokeWidth", "border_width"),
-         //new go.Binding("title","title")
+         new go.Binding("strokeWidth","border_width"),
+         new go.Binding("opacity", "isHighlighted", function(h) { return h ?
+         1 : 0.3; }).ofObject(),
      ),
      // define the node's text
      $(go.TextBlock,
-         {margin: 5, font: "bold 11px Helvetica, bold Arial, sans-serif"},
+         {margin: 5,
+          // font: "bold 11px Helvetica, bold Arial, sans-serif",
+          font: "bold 14px 微軟正黑體, bold 微軟正黑體, 微軟正黑體",
+      },
          new go.Binding("text","key"),
          new go.Binding("stroke","font_color"),
      )// TextBlock.text is bound to Node.data.key
@@ -151,12 +165,17 @@ function init(){
     //define the Link template
     myDiagram.linkTemplate =
     $(go.Link,
-        {selectable: false},
+        {selectable: false,
+            mouseEnter: function(e, link) { highlightLink(link, true);},
+            mouseLeave: function(e, link) { highlightLink(link, false);}
+            },
         $(go.Shape,
         {stroke: "black",
          strokeWidth: 2},
         new go.Binding("stroke","line_color"),
-        new go.Binding("strokeWidth","line_width"),),
+        new go.Binding("strokeWidth","line_width"),
+        new go.Binding("opacity", "isHighlighted", function(h) { return h ? 1 : 0.3; }).ofObject(),
+     )
      );
 
      //define the Click Listener template
@@ -167,20 +186,37 @@ function init(){
         if (!(part instanceof go.Link))
         {
 
-        if(part.data.key == "A5")
+        if(part.data.figure != "RoundedRectangle")  //  點擊人節點
         {
-            displaytable();
+            jQuery("#htmltable").empty();
+             jQuery.getJSON("user_keywords_mock.json").done(function(data_person) {
+
+        //Bindhtmltable(data);
+        create_Persontable(data_person);
+        jQuery("a").click(function() {
+            var _word = jQuery(this).text();
+            jQuery(this).attr("href", "http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?id=73&words="+encodeURI(_word));
+        });
+    });
         }
+        else if(part.data.figure == "RoundedRectangle"){  //點擊詞節點
+            var _word = part.data.key;
+            jQuery("#htmltable").empty();
+             jQuery.getJSON("userword_keywords_mock.json").done(function(data_word) {
 
-        else {
-             // alert("Clicked on " + part.data.title);
-            jQuery.getJSON("user_keywords_mock.json", function (user_keywords_list) {
-                alert("Clicked on " + user_keywords_list);
-            });
-
+        create_Wordtable(data_word);
+        jQuery("a").click(function() {
+            var _user = jQuery(this).text();
+            if(_user == _word){
+            jQuery(this).attr("href", "http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?id=73&words="+encodeURI(_word));
+        }else {
+            {
+            jQuery(this).attr("href", "http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?id=73&words="+encodeURI(_word)+"&user="+encodeURI(_user));
+            }
         }
-
-
+        });
+    });
+        }
         }
       });
 
@@ -209,9 +245,9 @@ function init(){
      myDiagram.model = new go.GraphLinksModel(p_node,p_link);
 
      TripleCircleLayout(myDiagram);
-     Bindhtmltable(myList);
 }
-//functions
+
+    //functions
 function TripleCircleLayout(diagram) {
     var $ = go.GraphObject.make;  // for conciseness in defining templates
     diagram.startTransaction("Multi Circle Layout");
@@ -227,7 +263,7 @@ function TripleCircleLayout(diagram) {
     var cntr = layout.actualCenter;
     diagram.moveParts(nodes, new go.Point(-cntr.x, -cntr.y));
     // next layout uses a larger radius
-    radius += 100;
+    radius += 120;
     layer++;
    }
 
@@ -244,44 +280,47 @@ function TripleCircleLayout(diagram) {
     return set;
  }
 
- function showMessage(s) {
-     document.getElementById("inputEventsMsg").textContent = s;
-   }
 
- function Bindhtmltable(list) {
-   var cols = addheadercols(list);
-   for (var i = 0; i < list.length; i++) {
-   var row = $('<tr/>');
-   for (var colIndex = 0; colIndex < cols.length; colIndex++) {
-   var cellValue = list[i][cols[colIndex]];
-   if (cellValue == null) { cellValue = ""; }
-   row.append($('<td/ style="text-align:center">').html(cellValue));
-   }
-   $("#htmltable").append(row);
-   }
- }
+function create_Persontable(data){
+    var number_of_rows = data.length;
 
- function addheadercols(list) {
-    var colset = [];
-    var headerTr = $('<thead/>');
-    headerTr.append($('<th/ colspan="2" style="text-align:center">').html("A5(學生姓名)"));
-    headerTr.append($('<tr/>'));
-    for (var i = 0; i < list.length; i++) {
-    var rows = list[i];
-    for (var key in rows) {
-    if ($.inArray(key, colset) == -1) {
-    colset.push(key);
-    headerTr.append($('<th/ style="text-align:center">').html(key));
-    }
-    }
-    }
-    $("#htmltable").append(headerTr);
-    return colset;
- }
-
- function displaytable(){
-     if(document.getElementById("inputEventsMsg").style.display != "block")
-     document.getElementById("inputEventsMsg").style.display = "block";
-     else
-     document.getElementById("inputEventsMsg").style.display = "none";
+              var table_body = '<thead><tr><th colspan = "2">'+data[0].fname+'</th></tr><tr><th>詞彙</th><th>次數</th></tr></thead><tbody>';
+              for(var i =0;i<number_of_rows;i++){
+                    table_body+='<tr>';
+                    table_body +='<td>';
+                    table_body +=data[i].word;
+                    table_body +='</td>';
+                    table_body +='<td>';
+                    table_body +=data[i].count;
+                    table_body +='</td>';
+                    table_body+='</tr>';
+              }
+                table_body+='</tbody>';
+               $('#htmltable').html(table_body);
 }
+function create_Wordtable(data){
+    var number_of_rows = data.length;
+
+              var table_body = '<thead><tr><th colspan = "3">'+data[0].word+'</th></tr><tr><th>組別編號</th><th>姓名</th><th>次數</th></tr></thead><tbody>';
+              for(var i =0;i<number_of_rows;i++){
+                    table_body+='<tr>';
+                    table_body +='<td>';
+                    table_body +=data[i].groupn;
+                    table_body +='</td>';
+                    table_body +='<td>';
+                    table_body +=data[i].name;
+                    table_body +='</td>';
+                    table_body +='<td>';
+                    table_body +=data[i].count;
+                    table_body +='</td>';
+                    table_body+='</tr>';
+              }
+                table_body+='</tbody>';
+               $('#htmltable').html(table_body);
+}
+
+    function highlightLink(link, show) {
+         link.isHighlighted = show;
+         link.fromNode.isHighlighted = show;
+         link.toNode.isHighlighted = show;
+       }

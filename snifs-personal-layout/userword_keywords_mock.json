@@ -1,0 +1,6 @@
+[
+    {"word" : "<a>討論</a>", "groupn" : "A01", "name" : "<a>A組 學生1</a>", "count" : "6"},
+    {"word" : "<a>討論</a>", "groupn" : "B5", "name" : "<a>雅翎</a>", "count" : "5"},
+    {"word" : "<a>討論</a>", "groupn" : "C1", "name" : "<a>黃</a>", "count" : "4"},
+    {"word" : "<a>討論</a>", "groupn" : "D3", "name" : "<a>雅翎 黃</a>", "count" : "3"}
+]
