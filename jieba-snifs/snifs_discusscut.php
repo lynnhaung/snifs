@@ -29,9 +29,9 @@ $dbuser = 'root';
 $dbpass = 'la2391';
 $dbname = 'moodle';
 
-$conn = mysql_connect($dbhost, $dbuser, $dbpass) ; 
-mysql_query("SET NAMES 'UTF8'"); 
-mysql_select_db($dbname); 
+$conn = mysql_connect($dbhost, $dbuser, $dbpass) ;
+mysql_query("SET NAMES 'UTF8'");
+mysql_select_db($dbname);
 
 if (!$conn) {
 	die(' 連線失敗，輸出錯誤訊息 : ' . mysql_error());
@@ -50,14 +50,14 @@ $new_id = $row_newid[0];
 //$conn_pg = pg_connect($conn_string);
 
 //抓目前斷詞最新ID
-$sql_old_anno_id = "SELECT source_id FROM jiebacut1 WHERE source LIKE 'disscussion%' ORDER BY source_id DESC LIMIT 1";
+$sql_old_anno_id = "SELECT source_id FROM snifs_jiebacut WHERE source NOT NULL ORDER BY source_id DESC LIMIT 1";
 $result_old_anno_id = mysql_query($sql_old_anno_id);
 $old_id_row = mysql_fetch_row($result_old_anno_id);
 
 if($old_id_row == ""){
     //抓討論區資料
     $sql_hsuforum = "SELECT post_id AS source_id, account AS user_account, discussion_id AS source, message AS tocut FROM discussion_snifs_all ORDER BY source_id ASC";
-    $result_hsuforum = mysql_query($sql_hsuforum); 
+    $result_hsuforum = mysql_query($sql_hsuforum);
     $num_hsuforum = mysql_num_rows($result_hsuforum);
 
     for ($i = 0; $i < $num_hsuforum; $i++){
@@ -65,24 +65,24 @@ if($old_id_row == ""){
         $source = "source"."$i";
         $source_id = "source_id"."$i";
         $toCut = "toCut"."$i";
-      
+
         while($row_hsuforum = mysql_fetch_row($result_hsuforum)){
             $$user_account = $row_hsuforum[1];
             echo $$user_account;
             switch ($row_hsuforum[2]){
                 case "2":
-                    $$source = "disscussion_D";
+                    $$source = "D";
                     break;
                 case "3":
-                    $$source = "disscussion_A";
+                    $$source = "A";
                     break;
                 case "4":
-                    $$source = "disscussion_B";
+                    $$source = "B";
                     break;
                 case "5":
-                    $$source = "disscussion_C";
+                    $$source = "C";
                     break;
-                
+
             }
             $$source_id = $row_hsuforum[0];
             //var_dump($row_hsuforum[3]);
@@ -92,9 +92,9 @@ if($old_id_row == ""){
             $seg_list = "seg_list"."$i";
             $$seg_list = Posseg ::cut($$toCut);
             //var_dump($$seg_list);
-            
+
             foreach ($$seg_list as $cutComplete){
-                $sql_insert = "INSERT INTO jiebacut1 (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
+                $sql_insert = "INSERT INTO snifs_jiebacut (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
                 $result_insert = mysql_query($sql_insert);
             }
         }
@@ -103,7 +103,7 @@ if($old_id_row == ""){
 }else{
     $old_id = $old_id_row[0];
 
-    if($new_id == $old_id){ 
+    if($new_id == $old_id){
 
 		if ($enableEcho === true) {
         echo "沒有新資料";
@@ -112,48 +112,48 @@ if($old_id_row == ""){
 	else{
         //抓新資料筆數
         $sql_hsuforum = "SELECT COUNT(post_id) FROM discussion_snifs_all WHERE post_id > $old_id ORDER BY post_id DESC";
-        $result_hsuforum = mysql_query($sql_hsuforum); 
+        $result_hsuforum = mysql_query($sql_hsuforum);
         $num_hsuforum = mysql_num_rows($result_hsuforum);
-        
+
         //抓討論區資料
         $sql_hsuforum = "SELECT post_id AS source_id, account AS user_account, discussion_id AS source, message AS tocut FROM discussion_snifs_all WHERE post_id > $old_id ORDER BY source_id ASC";
         $result_hsuforum = mysql_query($sql_hsuforum);
         $num_hsuforum = mysql_num_rows($result_hsuforum);
-        
+
         for ($i = 0; $i < $num_hsuforum; $i++){
             $user_account = "user_account"."$i";
             $source = "source"."$i";
             $source_id = "source_id"."$i";
             $toCut = "toCut"."$i";
-            
+
             while($row_hsuforum = mysql_fetch_row($result_hsuforum)){
                 $$user_account = $row_hsuforum[1];
                 echo $$user_account;
                 switch ($row_hsuforum[2]){
                     case "2":
-                        $$source = "disscussion_D";
+                        $$source = "D";
                         break;
                     case "3":
-                        $$source = "disscussion_A";
+                        $$source = "A";
                         break;
                     case "4":
-                        $$source = "disscussion_B";
+                        $$source = "B";
                         break;
                     case "5":
-                        $$source = "disscussion_C";
+                        $$source = "C";
                         break;
-                   
+
                 }
                 $$source_id = $row_hsuforum[0];
                 $$toCut = preg_replace('/\s/i','',$row_hsuforum[3]);
-               
+
                 //開始斷詞
                 $seg_list = "seg_list"."$i";
                 $$seg_list = Posseg ::cut($$toCut);
                 //var_dump($$seg_list);
-            
+
                 foreach ($$seg_list as $cutComplete){
-                    $sql_insert = "INSERT INTO jiebacut1 (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
+                    $sql_insert = "INSERT INTO snifs_jiebacut (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
                     $result_insert = mysql_query($sql_insert);
                 }
             }
@@ -169,6 +169,3 @@ if($old_id_row == ""){
 mysql_close($conn);
 //pg_close($conn_pg);
 ?>
-
-
-	
