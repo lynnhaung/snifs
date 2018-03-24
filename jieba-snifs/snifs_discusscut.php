@@ -50,7 +50,7 @@ $new_id = $row_newid[0];
 //$conn_pg = pg_connect($conn_string);
 
 //抓目前斷詞最新ID
-$sql_old_anno_id = "SELECT source_id FROM snifs_jiebacut WHERE source NOT NULL ORDER BY source_id DESC LIMIT 1";
+$sql_old_anno_id = "SELECT source_id FROM snifs_jiebacut ORDER BY id DESC LIMIT 1";
 $result_old_anno_id = mysql_query($sql_old_anno_id);
 $old_id_row = mysql_fetch_row($result_old_anno_id);
 
