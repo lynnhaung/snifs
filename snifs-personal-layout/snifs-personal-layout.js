@@ -5,6 +5,7 @@
     var C_green = "#21ba45";
     var D_red = "#db2828";
     var Black = "black";
+    var person_color, inwords_color, outwords_color, link_color;
     //define Node array
     var p_node =[];
     var inwords =
@@ -108,7 +109,38 @@
          { "詞彙": '<a href="">太陽能</a>', "次數": "1"},
     ]
 /*logic section*/
+/*連接資料庫*/
+$(document).ready(function()
+{
+    $.post('./personal_get_data.php', function(result, status, xhr)
+    {
+    obj = JSON.parse(result);
+    row_node_person = Object.keys(obj["row_node_person"]).map(function(key)
+        {
+        return obj["row_node_person"][key];
+        });
+    row_node_inwords = Object.keys(obj["row_node_inwords"]).map(function(key)
+        {
+        return obj["row_node_inwords"][key];
+        });
+    row_node_outwords = Object.keys(obj["row_node_outwords"]).map(function(key)
+        {
+        return obj["row_node_outwords"][key];
+        });
+    row_link = Object.keys(obj["row_link"]).map(function(key)
+        {
+        return obj["row_link"][key];
+        });
+    });
+
+});
+/*GoJS Layout function*/
 function init(){
+    // console.log(row_node_person);
+    // console.log(row_node_inwords);
+    // console.log(row_node_outwords);
+    // console.log(row_link);
+    // console.log(row_table_person);
     // for conciseness in defining templates in this function
     var $ = go.GraphObject.make; //to build GoJS objects
     // create a Diagram for the DIV HTML element
@@ -121,13 +153,6 @@ function init(){
             initialAutoScale: go.Diagram.Uniform,
             "animationManager.isEnabled": false,  //turn off automatic animations
             "undoManager.isEnabled": true,  // enable undo & redo
-            // a Changed listener on the Diagram.model
-            // "ModelChanged": function(e) { if (e.isTransactionFinished) saveModel(); }
-          //   click: function(e) {  // background click clears any remaining highlighteds
-          //   e.diagram.startTransaction("clear");
-          //   e.diagram.clearHighlighteds();
-          //   e.diagram.commitTransaction("clear");
-          // }
             });
     // define the Node template
     myDiagram.nodeTemplate =
@@ -222,23 +247,98 @@ function init(){
 
      //for loop to add values
      //inwords[]
-     for(var i = 0; i < inwords.length; i++)
+     for(var i = 0; i < row_node_inwords.length; i++)
      {
-         p_node.push({layer: 1, key: inwords[i].key, border_color: inwords[i].border_color, border_width: inwords[i].border_width, figure: "RoundedRectangle", color: inwords[i].color, title: inwords[i].title });
+         if(row_node_inwords[i][1]  == "A")
+         {
+             inwords_color = A_blue;
+         }
+         else if(row_node_inwords[i][1] == "B")
+         {
+             inwords_color= B_yellow;
+         }
+         else if(row_node_inwords[i][1] == "C")
+         {
+             inwords_color = C_green;
+         }
+         else if(row_node_inwords[i][1] == "D")
+         {
+             inwords_color = D_red;
+         }
+         else if(row_node_inwords[i][1] == "X")
+         {
+             inwords_color = Black;
+         }
+         p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: row_node_inwords[i][2], figure: "RoundedRectangle"
+         // , color:
+     });
      }
      //students[]
-     for(var i = 0; i < students.length; i++)
+     for(var i = 0; i < row_node_person.length; i++)
      {
-         p_node.push({layer: 2, key: students[i].key, color: students[i].color, font_color: students[i].font_color, border_color: students[i].border_color, border_width: students[i].border_width});
+         //color or color[i]
+         if(row_node_person[i][3]  == "A")
+         {
+             person_color = A_blue;
+         }
+         else if(row_node_person[i][3] == "B")
+         {
+             person_color= B_yellow;
+         }
+         else if(row_node_person[i][3] == "C")
+         {
+             person_color = C_green;
+         }
+         else if(row_node_person[i][3] == "D")
+         {
+             person_color = D_red;
+         }
+         p_node.push({layer: 2, key: row_node_person[i][3]+row_node_person[i][4], color: person_color, border_color: person_color
+         // , font_color: , border_width:
+         });
      }
      //outwords[]
-     for(var i = 0; i < outwords.length; i++)
+     for(var i = 0; i < row_node_outwords.length; i++)
      {
-         p_node.push({layer: 3, key: outwords[i].key, border_color: outwords[i].border_color, border_width: outwords[i].border_width, figure: "RoundedRectangle", color: outwords[i].color});
+         if(row_node_outwords[i][1] == "A")
+         {
+             outwords_color = A_blue;
+         }
+         else if(row_node_outwords[i][1] == "B")
+         {
+             outwords_color= B_yellow;
+         }
+         else if(row_node_outwords[i][1] == "C")
+         {
+             outwords_color = C_green;
+         }
+         else if(row_node_outwords[i][1] == "D")
+         {
+             outwords_color = D_red;
+         }
+         p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: row_node_outwords[i][2], figure: "RoundedRectangle"
+         // , color:
+     });
      }
-     for(var i = 0; i < linknodes.length; i++)
+     for(var i = 0; i < row_link.length; i++)
      {
-         p_link.push({from: linknodes[i].from, to: linknodes[i].to, line_color: linknodes[i].line_color});
+         if(row_link[i][2]  == "A")
+         {
+             link_color = A_blue;
+         }
+         else if(row_link[i][2] == "B")
+         {
+             link_color= B_yellow;
+         }
+         else if(row_link[i][2] == "C")
+         {
+             link_color = C_green;
+         }
+         else if(row_link[i][2] == "D")
+         {
+             link_color = D_red;
+         }
+         p_link.push({from: row_link[i][2]+row_link[i][3], to: row_link[i][4], line_color: link_color});
      }
 
      // create the model data that will be represented by Nodes and Links
