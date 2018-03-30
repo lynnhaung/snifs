@@ -5739,7 +5739,7 @@ function hsuforum_print_latest_discussions($course, $forum, $maxdiscussions=-1, 
 
     $showdisplayformat = false;
     if (ajaxenabled() and $displayformat == 'header') {
-        $displayformat = optional_param('displayformat', '', PARAM_ALPHA);
+        $displayformat = optional_param('displayformat', 'article', PARAM_ALPHA);
         if (!empty($displayformat)) {
             set_user_preference('hsuforum_displayformat', $displayformat);
         } else {
