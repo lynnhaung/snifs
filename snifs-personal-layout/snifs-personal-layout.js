@@ -25,7 +25,7 @@ $(document).ready(function()
             return obj["row_node_person"][key];
             });
             // console.log(row_node_person);
-    });
+    // });
 //節點(圈內詞)
     $.post('./personal_get_data/personal_node_inwords.php', function(result, status, xhr)
     {
@@ -35,7 +35,7 @@ $(document).ready(function()
             return obj["row_node_inwords"][key];
             });
             // console.log(row_node_inwords);
-    });
+    // });
 //節點(圈外詞)
     $.post('./personal_get_data/personal_node_outwords.php', function(result, status, xhr)
     {
@@ -45,7 +45,7 @@ $(document).ready(function()
             return obj["row_node_outwords"][key];
             });
             // console.log(row_node_outwords);
-    });
+    // });
 //連線(圈內詞)
     $.post('./personal_get_data/personal_link_inwords.php', function(result, status, xhr)
     {
@@ -55,7 +55,7 @@ $(document).ready(function()
             return obj["row_link_inwords"][key];
             });
             // console.log(row_link_inwords);
-    });
+    // });
 //連線(圈外詞)
     $.post('./personal_get_data/personal_link_outwords.php', function(result, status, xhr)
     {
@@ -65,10 +65,10 @@ $(document).ready(function()
             return obj["row_link_outwords"][key];
             });
             // console.log(row_link_outwords);
-    });
-});
-/*GoJS Layout function*/
-function init(){
+    // });
+
+/*SNIFS Layout Build Start*/
+// function init(){
     // for conciseness in defining templates in this function
     var $ = go.GraphObject.make; //to build GoJS objects
     // create a Diagram for the DIV HTML element
@@ -157,7 +157,7 @@ function init(){
                 create_Persontable(row_table_person);
                 jQuery("a").click(function() {
                     var _word = jQuery(this).text();
-                    jQuery(this).attr("href", "http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?id=73&words="+encodeURI(_word)).attr('target','_blank');
+                    jQuery(this).attr("href", "http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/search.php?id=73&words="+encodeURI(_word)+"&user="+encodeURI(row_table_person[0][1])).attr('target','_blank');
                 });
             });
         }
@@ -311,9 +311,17 @@ function init(){
      myDiagram.model = new go.GraphLinksModel(p_node,p_link);
 
      TripleCircleLayout(myDiagram);
-}
 
-    //functions
+/*SNIFS Layout Build End*/
+// }
+    });//post:row_node_person
+    });//post:row_node_inwords
+    });//post:row_node_outwords
+    });//post:row_link_inwords
+    });//post:row_link_outwords
+});//document.ready
+
+//Functions
 function TripleCircleLayout(diagram) {
     var $ = go.GraphObject.make;  // for conciseness in defining templates
     diagram.startTransaction("Multi Circle Layout");
@@ -348,7 +356,7 @@ function TripleCircleLayout(diagram) {
 //建立人、詞表格Function
 function create_Persontable(data){
     var number_of_rows = data.length;
-              var table_body = '<thead><tr><th colspan = "2">'+data[0][0]+'('+data[0][1]+')'+'</th></tr><tr><th>詞彙</th><th>次數</th></tr></thead><tbody>';
+              var table_body = '<thead><tr><th colspan = "2">'+data[0][0]+'('+data[0][1]+')'+'</th></tr><tr><th>搜尋[詞彙]</th><th>次數</th></tr></thead><tbody>';
               for(var i =0;i<number_of_rows;i++){
                     table_body+='<tr>';
                     table_body +='<td>';
@@ -364,7 +372,7 @@ function create_Persontable(data){
 }
 function create_Wordtable(data){
     var number_of_rows = data.length;
-              var table_body = '<thead><tr><th colspan = "3">'+'<a>'+data[0][0]+'</a></th></tr><tr><th>組別編號</th><th>姓名</th><th>次數</th></tr></thead><tbody>';
+              var table_body = '<thead><tr><th colspan = "3">搜尋['+'<a>'+data[0][0]+'</a>]</th></tr><tr><th>組別編號</th><th>搜尋[姓名+詞彙]</th><th>次數</th></tr></thead><tbody>';
               for(var i =0;i<number_of_rows;i++){
                     table_body+='<tr>';
                     table_body +='<td>';
