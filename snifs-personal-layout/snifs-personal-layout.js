@@ -1,3 +1,5 @@
+console.log("userid="+userid);
+
 /*data section*/
     //define color variable
     var A_blue = "#2185d0";
@@ -5,7 +7,7 @@
     var C_green = "#21ba45";
     var D_red = "#db2828";
     var Black = "black";
-    var person_color, inwords_color, outwords_color, link_color;
+    var person_color, person_border_color, person_border_width, inwords_color, inwords_bg_color, outwords_color, outwords_bg_color, link_color;
     //define Node array
     var p_node =[];
     // define Link array
@@ -210,10 +212,30 @@ $(document).ready(function()
          {
              person_color = D_red;
          }
-         p_node.push({layer: 2, key: row_node_person[i][5], color: person_color, border_color: person_color
+         //判斷登入的使用者
+         if(userid == row_node_person[i][1])
+         {
+             person_border_color = "yellow";
+             person_border_width = 4;
+         }else
+         {
+             person_border_width = 0;
+         }
+         p_node.push({layer: 2, key: row_node_person[i][5], color: person_color, border_color: person_border_color, border_width: person_border_width
          // , font_color: , border_width:
          });
      }
+     //利用登入帳號去找該帳號使用的圈內詞
+     var selfInwords = {
+         user: userid
+     };
+     jQuery.post('personal_table_get_data.php',selfInwords, function(result, status, xhr)
+     {
+         obj = JSON.parse(result);
+         row_self_inwords= Object.keys(obj["row_self_inwords"]).map(function(key)
+             {
+             return obj["row_self_inwords"][key];
+             });
      //inwords[]
      for(var i = 0; i < row_node_inwords.length; i++)
      {
@@ -237,10 +259,24 @@ $(document).ready(function()
          {
              inwords_color = Black;
          }
-         p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: row_node_inwords[i][2], figure: "RoundedRectangle"
+          //標亮登入使用者用的圈內詞
+         for(j=0; j< row_self_inwords.length; j++){
+
+         if(row_node_inwords[i][0] == row_self_inwords[j][1])
+         {
+             inwords_bg_color = "yellow";
+             break;
+         }
+         else
+         {
+             inwords_bg_color = "white";
+         }
+         }
+         p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: row_node_inwords[i][2], figure: "RoundedRectangle", color: inwords_bg_color
          // , color:
      });
      }
+
      //outwords[]
      for(var i = 0; i < row_node_outwords.length; i++)
      {
@@ -260,7 +296,15 @@ $(document).ready(function()
          {
              outwords_color = D_red;
          }
-         p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: row_node_outwords[i][2], figure: "RoundedRectangle"
+         //判斷登入的使用者
+         if(userid == row_node_outwords[i][3])
+         {
+             outwords_bg_color = "yellow";
+         }else
+         {
+             outwords_bg_color = "white";
+         }
+         p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: row_node_outwords[i][2], figure: "RoundedRectangle", color: outwords_bg_color
          // , color:
      });
      }
@@ -314,11 +358,12 @@ $(document).ready(function()
 
 /*SNIFS Layout Build End*/
 // }
-    });//post:row_node_person
-    });//post:row_node_inwords
-    });//post:row_node_outwords
-    });//post:row_link_inwords
+    });//post:row_self_inwords
     });//post:row_link_outwords
+    });//post:row_link_inwords
+    });//post:row_node_outwords
+    });//post:row_node_inwords
+    });//post:row_node_person
 });//document.ready
 
 //Functions

@@ -24,8 +24,23 @@ for($i = 0; $i<$num_node_person; $i++)
 //data transmit
 $data_node_person = array(
 
-    row_node_person => $row_node_person
+    row_node_person => url_encode($row_node_person)
 );
 
-echo json_encode($data_node_person);
+echo urldecode(json_encode($data_node_person));
 /***************************************************/
+//中文編碼function
+function url_encode($str) {
+    if(is_array($str)) {
+        foreach($str as $key=>$value) {
+            $str[urlencode($key)] = url_encode($value);
+        }
+    } else {
+        $str = urlencode($str);
+    }
+
+    return $str;
+}
+/***************************************************/
+mysql_close($conn);
+?>

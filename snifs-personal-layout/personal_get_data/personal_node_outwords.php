@@ -31,9 +31,24 @@ for($i = 0; $i<$num_node_outwords; $i++)
 //data transmit
 $data_node_outwords = array(
 
-    row_node_outwords => $row_node_outwords,
+    row_node_outwords => url_encode($row_node_outwords)
 
 );
 
-echo json_encode($data_node_outwords);
+echo urldecode(json_encode($data_node_outwords));
 /***************************************************/
+//中文編碼function
+function url_encode($str) {
+    if(is_array($str)) {
+        foreach($str as $key=>$value) {
+            $str[urlencode($key)] = url_encode($value);
+        }
+    } else {
+        $str = urlencode($str);
+    }
+
+    return $str;
+}
+/***************************************************/
+mysql_close($conn);
+?>
