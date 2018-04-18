@@ -1,16 +1,6 @@
 <?php
-error_reporting(0);
-$dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = 'la2391';
-$dbname = 'moodle';
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-if(!$conn){
-    die('Could not connect: ' . mysql_error());
-}
-//echo 'Connected successfully';
-mysql_query("Set names 'utf8'");
-mysql_select_db($dbname);
+include '../db/config.php';
+include '../db/customer_function.php';
 /***************************************************/
 //圈外詞節點(一人最多10個)
 $sql_node_outwords = "SELECT words, team, countof,user_account, row_numbers
@@ -20,7 +10,7 @@ FROM (
           (SELECT @row_numbers := 1) x,
           (SELECT countof, words, team, @var_user_account := user_account as user_account FROM snifs_p_node_outwords ORDER BY user_account, countof desc) y
     ) z
-WHERE row_numbers <= 10;";
+WHERE row_numbers <= 5;";
 $result_node_outwords = mysql_query($sql_node_outwords) or die ('Invalid query: '.mysql_error());
 $num_node_outwords = mysql_num_rows($result_node_outwords);
 for($i = 0; $i<$num_node_outwords; $i++)
@@ -37,18 +27,6 @@ $data_node_outwords = array(
 
 echo urldecode(json_encode($data_node_outwords));
 /***************************************************/
-//中文編碼function
-function url_encode($str) {
-    if(is_array($str)) {
-        foreach($str as $key=>$value) {
-            $str[urlencode($key)] = url_encode($value);
-        }
-    } else {
-        $str = urlencode($str);
-    }
 
-    return $str;
-}
-/***************************************************/
 mysql_close($conn);
 ?>

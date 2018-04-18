@@ -1,16 +1,6 @@
 <?php
-error_reporting(0);
-$dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = 'la2391';
-$dbname = 'moodle';
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-if(!$conn){
-    die('Could not connect: ' . mysql_error());
-}
-//echo 'Connected successfully';
-mysql_query("Set names 'utf8'");
-mysql_select_db($dbname);
+include '../db/config.php';
+include '../db/customer_function.php';
 /***************************************************/
 //圈內詞連線(最多20個 snifs_p_node_inwords limit 20)
 $sql_link_inwords = "SELECT user_account, name, team, number, teamn, words
@@ -31,18 +21,6 @@ $data_link_inwords = array(
 
 echo urldecode(json_encode($data_link_inwords));
 /***************************************************/
-//中文編碼function
-function url_encode($str) {
-    if(is_array($str)) {
-        foreach($str as $key=>$value) {
-            $str[urlencode($key)] = url_encode($value);
-        }
-    } else {
-        $str = urlencode($str);
-    }
 
-    return $str;
-}
-/***************************************************/
 mysql_close($conn);
 ?>

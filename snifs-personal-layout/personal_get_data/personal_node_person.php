@@ -1,16 +1,6 @@
 <?php
-error_reporting(0);
-$dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = 'la2391';
-$dbname = 'moodle';
-$conn = mysql_connect($dbhost, $dbuser, $dbpass);
-if(!$conn){
-    die('Could not connect: ' . mysql_error());
-}
-//echo 'Connected successfully';
-mysql_query("Set names 'utf8'");
-mysql_select_db($dbname);
+include '../db/config.php';
+include '../db/customer_function.php';
 /***************************************************/
 //人節點
 $sql_node_person = "select user_id, user_account, name, team, number, teamn from `snifs_p_node_person` group by user_id order by user_id";
@@ -29,18 +19,6 @@ $data_node_person = array(
 
 echo urldecode(json_encode($data_node_person));
 /***************************************************/
-//中文編碼function
-function url_encode($str) {
-    if(is_array($str)) {
-        foreach($str as $key=>$value) {
-            $str[urlencode($key)] = url_encode($value);
-        }
-    } else {
-        $str = urlencode($str);
-    }
 
-    return $str;
-}
-/***************************************************/
 mysql_close($conn);
 ?>

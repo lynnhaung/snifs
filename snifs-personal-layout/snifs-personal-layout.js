@@ -1,5 +1,4 @@
 console.log("userid="+userid);
-
 /*data section*/
     //define color variable
     var A_blue = "#2185d0";
@@ -18,7 +17,7 @@ console.log("userid="+userid);
 /*連接資料庫*/
 $(document).ready(function()
 {
-//節點(人)
+//節點(人)  //網址變數 團體個人
     $.post('./personal_get_data/personal_node_person.php', function(result, status, xhr)
     {
         obj = JSON.parse(result);
@@ -105,7 +104,7 @@ $(document).ready(function()
          new go.Binding("stroke","border_color"),
          new go.Binding("strokeWidth","border_width"),
          new go.Binding("opacity", "isHighlighted", function(h) { return h ?
-         1 : 0.3; }).ofObject(),
+         1 : 0.5; }).ofObject(),
      ),
      // define the node's text
      $(go.TextBlock,
@@ -129,7 +128,7 @@ $(document).ready(function()
          strokeWidth: 2},
         new go.Binding("stroke","line_color"),
         new go.Binding("strokeWidth","line_width"),
-        new go.Binding("opacity", "isHighlighted", function(h) { return h ? 1 : 0.3; }).ofObject(),
+        new go.Binding("opacity", "isHighlighted", function(h) { return h ? 1 : 0.5; }).ofObject(),
      )
      );
 
@@ -148,7 +147,7 @@ $(document).ready(function()
             var sendPerson = {
                 person: _person,
             };
-            jQuery.post('personal_table_get_data.php',sendPerson, function(result, status, xhr)
+            jQuery.post('./personal_get_data/personal_table_get_data.php',sendPerson, function(result, status, xhr)
             {
                 obj = JSON.parse(result);
                 row_table_person = Object.keys(obj["row_table_person"]).map(function(key)
@@ -169,7 +168,7 @@ $(document).ready(function()
             var sendWord = {
                 words: _words,
             };
-            jQuery.post('personal_table_get_data.php',sendWord, function(result, status, xhr)
+            jQuery.post('./personal_get_data/personal_table_get_data.php',sendWord, function(result, status, xhr)
             {
                 obj = JSON.parse(result);
                 row_table_words= Object.keys(obj["row_table_words"]).map(function(key)
@@ -216,7 +215,7 @@ $(document).ready(function()
          if(userid == row_node_person[i][1])
          {
              person_border_color = "yellow";
-             person_border_width = 4;
+             person_border_width = 10;
          }else
          {
              person_border_width = 0;
@@ -229,7 +228,7 @@ $(document).ready(function()
      var selfInwords = {
          user: userid
      };
-     jQuery.post('personal_table_get_data.php',selfInwords, function(result, status, xhr)
+     jQuery.post('./personal_get_data/personal_table_get_data.php',selfInwords, function(result, status, xhr)
      {
          obj = JSON.parse(result);
          row_self_inwords= Object.keys(obj["row_self_inwords"]).map(function(key)
@@ -371,7 +370,11 @@ function TripleCircleLayout(diagram) {
     var $ = go.GraphObject.make;  // for conciseness in defining templates
     diagram.startTransaction("Multi Circle Layout");
 
-    var radius = 50;
+    var radius = 50; //layer 1的半徑
+    if(row_node_inwords.length>15) //圈內詞超過15個加大半徑
+    {
+    radius=80;
+    }
     var layer = 1;
     var nodes = null;
     while (nodes = nodesByLayer(diagram, layer), nodes.count > 0) {
@@ -382,7 +385,17 @@ function TripleCircleLayout(diagram) {
     var cntr = layout.actualCenter;
     diagram.moveParts(nodes, new go.Point(-cntr.x, -cntr.y));
     // next layout uses a larger radius
-    radius += 120;
+    if(layer==1 & row_node_inwords.length>15) //圈內詞超過15個加大半徑
+    {
+    radius += 180; //layer 2的半徑 = 80+180 = 260
+    }
+    else //圈內詞未超過15個
+    {
+    radius += 120; //layer 2的半徑 = 50+120 = 170
+    }
+    if(layer==2){
+    radius += 20; //layer 3的半徑
+    }
     layer++;
    }
 
