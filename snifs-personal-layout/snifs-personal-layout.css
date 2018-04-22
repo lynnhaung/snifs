@@ -12,18 +12,25 @@ div{
 
 #myDiagramDiv{
     background-color: white;
-    border: 1px solid black;
-    width: 45%;
+    border: 1px solid gray;
+    width: 61.8%;
     height: 550px;
     position: relative;
     float:left; /* two div in a row*/
 }
 #inputEventsMsg{
-    width: 35%;
+    width: 38.2%;
     height: 550px;
-    /* border: 1px solid black; */
+    border: 1px solid gray;
     /* display: none; */
+    /* position: fixed;
+    background-color: white !important;
+    right: 0;
+    z-index: 999;
+    overflow-y: auto;
+    height: 100vh; */
     float:left; /* two div in a row*/
+
 }
 footer{
 

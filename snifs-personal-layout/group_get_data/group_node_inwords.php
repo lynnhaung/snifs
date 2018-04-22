@@ -2,8 +2,8 @@
 include '../db/config.php';
 include '../db/customer_function.php';
 /***************************************************/
-//圈內詞節點(最多30個 資料表snifs_p_node_inwords limit 30)
-$sql_node_inwords = "select words, WordTeam, Total_population from snifs_p_node_inwords limit 30";
+//圈內詞節點(最多30個 資料表snifs_g_node_inwords limit 30)
+$sql_node_inwords = "select words, WordTeam, Total_population from snifs_g_node_inwords limit 30";
 $result_node_inwords = mysql_query($sql_node_inwords) or die ('Invalid query: '.mysql_error());
 $num_node_inwords = mysql_num_rows($result_node_inwords);
 for($i = 0; $i<$num_node_inwords; $i++)

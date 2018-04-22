@@ -25,16 +25,17 @@
     echo 'var userid = ' . json_encode($userid) . ';';
     echo '</script>';
      ?>
-        <!-- <script>
-         USERNAME = "<?php //echo $_GET["layout"]; ?>";
-        </script> -->
+<!--判定抓個人或小組資料-->
+        <script>
+         layout = "<?php echo $_GET["layout"]; ?>";
+        </script>
         </header>
         <div id ="myDiagramDiv">
 
         </div>
         <div id ="inputEventsMsg">
 
-            <table class="ui blue table" id="htmltable" border="1" cellpadding="2" style="border-collapse: collapse;">
+            <table class="ui blue table tbspan" id="htmltable" border="1" cellpadding="2" style="border-collapse: collapse;">
             <table class="ui orange table" id="htmltable1" border="1" cellpadding="2" style="border-collapse: collapse;">
             </table>
 
