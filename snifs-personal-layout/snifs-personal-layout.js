@@ -8,7 +8,7 @@ console.log("layout="+layout);
     var C_green = "#21ba45";
     var D_red = "#db2828";
     var Black = "black";
-    var person_color, person_border_color, person_border_width, inwords_color, inwords_bg_color, outwords_color, outwords_bg_color, link_color;
+    var person_color, person_border_color, person_border_width, inwords_border_width, inwords_color, inwords_bg_color, outwords_color, outwords_bg_color, link_color;
     //define Node array
     var p_node =[];
     //define Link array
@@ -285,7 +285,15 @@ if(layout == 'personal')
              inwords_bg_color = "white";
          }
          }
-         p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: row_node_inwords[i][2], figure: "RoundedRectangle", color: inwords_bg_color
+         // 判斷該詞人使用次數>4將點度固定為5
+         if(row_node_inwords[i][2] > 4)
+         {
+         inwords_border_width = 5;
+         }else {
+         inwords_border_width = row_node_inwords[i][2];
+         }
+
+         p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: inwords_border_width, figure: "RoundedRectangle", color: inwords_bg_color
          // , color:
      });
      }
@@ -317,7 +325,7 @@ if(layout == 'personal')
          {
              outwords_bg_color = "white";
          }
-         p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: row_node_outwords[i][2], figure: "RoundedRectangle", color: outwords_bg_color
+         p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: 1, figure: "RoundedRectangle", color: outwords_bg_color
          // , color:
      });
      }
@@ -527,7 +535,15 @@ else if(layout == 'group')
             inwords_bg_color = "white";
         }
         }
-        p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: row_node_inwords[i][2], figure: "RoundedRectangle", color: inwords_bg_color
+        // 判斷該詞組使用次數>4將點度固定為5
+        if(row_node_inwords[i][2] > 4)
+        {
+        inwords_border_width = 5;
+        }else {
+        inwords_border_width = row_node_inwords[i][2];
+        }
+
+        p_node.push({layer: 1, key: row_node_inwords[i][0], border_color: inwords_color, border_width: inwords_border_width, figure: "RoundedRectangle", color: inwords_bg_color
         // , color:
     });
     }
@@ -559,7 +575,7 @@ else if(layout == 'group')
         {
             outwords_bg_color = "white";
         }
-        p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: row_node_outwords[i][2], figure: "RoundedRectangle", color: outwords_bg_color
+        p_node.push({layer: 3, key: row_node_outwords[i][0], border_color: outwords_color, border_width: 1, figure: "RoundedRectangle", color: outwords_bg_color
         // , color:
     });
     }
