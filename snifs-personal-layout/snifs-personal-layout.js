@@ -158,6 +158,7 @@ if(layout == 'personal')
         {
             jQuery("#htmltable").empty();
             var _person = part.data.key;
+            alert(_person);
             var sendPerson = {
                 person: _person,
             };
@@ -178,6 +179,10 @@ if(layout == 'personal')
         }
         else if(part.data.figure == "RoundedRectangle"){  //點擊詞節點
             var _words = part.data.key;
+            //alert(_words);
+            ga("send", "event", "snif_node_term", get_user_id(), _words, 100);
+            console.log(["snif_node_term", get_user_id(), _words]);
+
             jQuery("#htmltable").empty();
             var sendWord = {
                 words: _words,

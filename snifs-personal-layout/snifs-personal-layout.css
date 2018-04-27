@@ -13,14 +13,14 @@ div{
 #myDiagramDiv{
     background-color: white;
     border: 1px solid gray;
-    width: 61.8%;
-    height: 550px;
+    width: 100%;
+    height: 100vh;
     position: relative;
     float:left; /* two div in a row*/
 }
 #inputEventsMsg{
     width: 38.2%;
-    height: 550px;
+    max-height: 550px;
     border: 1px solid gray;
     /* display: none; */
     /* position: fixed;

@@ -496,4 +496,3 @@ function hsuforum_menu_list($course)  {
 
     return $menu;
 }
-

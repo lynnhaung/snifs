@@ -2,9 +2,9 @@
 <html>
     <head>
     <meta charset="UTF-8">
-    <script src="./assets/js/jQuery3.3.1.min.js"></script>
-    <script src="./release/go.js"></script>
-
+    <script src="/iframe/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="../google-analytics/config/exp-snifs-2018.js" type="text/javascript"></script>
+    <script src="./release/go.js" type="text/javascript"></script>
 
     <!-- <script src="test.js"></script> -->
     <link rel="stylesheet" type="text/css" href="snifs-personal-layout.css">
@@ -14,8 +14,7 @@
     <title>SNIFS Personal Layout</title>
     </head>
 
-    <!-- <body onload="init()"> -->
-        <header>
+    <body>
 <!--抓使用者帳號-->
     <?php
     require('../config.php');
@@ -26,10 +25,9 @@
     echo '</script>';
      ?>
 <!--判定抓個人或小組資料-->
-        <script>
+        <script type="text/javascript">
          layout = "<?php echo $_GET["layout"]; ?>";
         </script>
-        </header>
         <div id ="myDiagramDiv">
 
         </div>
@@ -40,10 +38,7 @@
             </table>
 
         </div>
-        <footer>
-        </footer>
 
-        <script src="./assets/js/goSamples.js"></script><!-- this is only for the GoJS Samples framework -->
-        <script src="snifs-personal-layout.js"></script>
+        <script src="snifs-personal-layout.js" type="text/javascript"></script>
     </body>
 </html>
