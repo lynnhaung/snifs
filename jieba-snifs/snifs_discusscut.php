@@ -1,15 +1,15 @@
 <?php
 $enableEcho = true;
 
-
 header("Content-Type:text/html; charset=utf-8");
-ini_set('memory_set', '256M');
+
+//斷詞
+ini_set('memory_set', '64M');
 
 require_once "./jieba/src/class/Jieba.php";
 require_once "./jieba/src/class/Finalseg.php";
 //斷詞+詞性
 require_once "./jieba/src/class/Posseg.php";
-
 require_once "./jieba/src/vendor/multi-array/MultiArray.php";
 require_once "./jieba/src/vendor/multi-array/Factory/MultiArrayFactory.php";
 
@@ -21,7 +21,6 @@ Jieba::init();
 Finalseg::init();
 //斷詞+詞性
 Posseg::init();
-
 
 //資料庫連接 (MySQL _ Moodle)
 $dbhost = 'localhost:3306';
@@ -44,11 +43,6 @@ $row_newid = mysql_fetch_row($result_newid);
 
 $new_id = $row_newid[0];
 
-/*****************************************************************************************************************/
-//資料庫連接 (Postgresql)
-//$conn_string = "host=localhost port=5432 dbname=kals user=kals password=password";
-//$conn_pg = pg_connect($conn_string);
-
 //抓目前斷詞最新ID
 $sql_old_anno_id = "SELECT source_id FROM snifs_jiebacut ORDER BY id DESC LIMIT 1";
 $result_old_anno_id = mysql_query($sql_old_anno_id);
@@ -68,7 +62,7 @@ if($old_id_row == ""){
 
         while($row_hsuforum = mysql_fetch_row($result_hsuforum)){
             $$user_account = $row_hsuforum[1];
-            echo $$user_account;
+            //echo $$user_account;
             switch ($row_hsuforum[2]){
                 case "2":
                     $$source = "D";
@@ -85,28 +79,29 @@ if($old_id_row == ""){
 
             }
             $$source_id = $row_hsuforum[0];
-            //var_dump($row_hsuforum[3]);
-            $$toCut = preg_replace('/\s/i','',$row_hsuforum[3]);
-            //var_dump($$toCut);
-            //開始斷詞
+            $$toCut = strip_tags($row_hsuforum[3]);
+
+            //斷詞
             $seg_list = "seg_list"."$i";
             $$seg_list = Posseg ::cut($$toCut);
-            //var_dump($$seg_list);
-
+//            sleep(1);
+            
             foreach ($$seg_list as $cutComplete){
                 $sql_insert = "INSERT INTO snifs_jiebacut (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
                 $result_insert = mysql_query($sql_insert);
+                //sleep(1);
             }
+            sleep(1);
         }
     }
-    echo "初次利用";
+    echo "First Time Use.";
 }else{
     $old_id = $old_id_row[0];
 
     if($new_id == $old_id){
 
 		if ($enableEcho === true) {
-        echo "沒有新資料";
+        echo "No New Data";
 		}
 	}
 	else{
@@ -128,7 +123,7 @@ if($old_id_row == ""){
 
             while($row_hsuforum = mysql_fetch_row($result_hsuforum)){
                 $$user_account = $row_hsuforum[1];
-                echo $$user_account;
+                //echo $$user_account;
                 switch ($row_hsuforum[2]){
                     case "2":
                         $$source = "D";
@@ -145,27 +140,27 @@ if($old_id_row == ""){
 
                 }
                 $$source_id = $row_hsuforum[0];
-                $$toCut = preg_replace('/\s/i','',$row_hsuforum[3]);
+                $$toCut = strip_tags($row_hsuforum[3]);
 
-                //開始斷詞
+                //斷詞
                 $seg_list = "seg_list"."$i";
                 $$seg_list = Posseg ::cut($$toCut);
-                //var_dump($$seg_list);
-
+                sleep(1);
+                
                 foreach ($$seg_list as $cutComplete){
                     $sql_insert = "INSERT INTO snifs_jiebacut (user_account, source, source_id, words, tag) VALUES ('".$$user_account."','".$$source."',".$$source_id.",'".$cutComplete['word']."','".$cutComplete['tag']."')";
                     $result_insert = mysql_query($sql_insert);
+                    //sleep(1);
                 }
+                sleep(1);
             }
         }
         if ($enableEcho === true) {
-			echo "資料已更新";
+			echo "Data Updated";
 		}
     }
 }
 
 
-/*****************************************************************************************************************/
 mysql_close($conn);
-//pg_close($conn_pg);
 ?>

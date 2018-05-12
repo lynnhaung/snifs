@@ -31,12 +31,19 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li>
-                <button id="btn_snifs_switch_person" class="ui button" onClick="personURL()">個人</button>
-            </li>
-            <li>
-                <button id="btn_snifs_switch_group" class="ui button" onClick="groupURL()">小組</button>
-            </li>
+            <?php
+            if (!(isset($_GET["mode"]) && $_GET["mode"] === "ctl")) {
+                ?>
+                <li>
+                    <button id="btn_snifs_switch_person" class="ui button" onClick="personURL()">個人</button>
+                </li>
+                <li>
+                    <button id="btn_snifs_switch_group" class="ui button" onClick="groupURL()">小組</button>
+                </li>
+                <?php
+            }
+            ?>
+
             <li>
                 <button id="btnArticles" class="ui button">閱讀教材</button>
             </li>
@@ -72,12 +79,26 @@
 
     <div class="MainContainer">
         <div class="row">
-            <div class="col-lg holds-the-iframe">
-                <iframe name="snifs" class="frameBox" id = "snifs" src="/snifs-personal-layout/snifs-personal-layout.php?layout=personal" scrolling="yes"></iframe>
-            </div>
-            <div class="col-lg">
-                <iframe id="discuss" name="discuss" class="frameBox" src="http://exp-snifs-2018.dlll.nccu.edu.tw/mod/hsuforum/view.php?id=564&group=0" scrolling="yes"></iframe>
-            </div>
+            <?php
+            if (isset($_GET["mode"]) && $_GET["mode"] === "ctl") {
+                ?>
+                <div class="col-lg">
+                    <iframe id="discuss" name="discuss" class="frameBox" src="/mod/hsuforum/view.php?id=564&group=0" scrolling="yes"></iframe>
+                </div>
+                <?php
+            }
+            else {
+                ?>
+
+                <div class="col-lg">
+                    <iframe name="snifs" class="frameBox" id = "snifs" src="/snifs-personal-layout/snifs-personal-layout.php?layout=personal" scrolling="yes"></iframe>
+                </div>
+                <div class="col-lg">
+                    <iframe id="discuss" name="discuss" class="frameBox" src="/mod/hsuforum/view.php?id=564&group=0" scrolling="yes"></iframe>
+                </div>
+                <?php
+            }
+            ?>
         </div>
     </div>
 

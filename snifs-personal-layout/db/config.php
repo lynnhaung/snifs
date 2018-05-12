@@ -12,4 +12,3 @@ if(!$conn){
 //echo 'Connected successfully';
 mysql_query("Set names 'utf8'");
 mysql_select_db($dbname);
-?>

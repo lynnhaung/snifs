@@ -1,41 +1,73 @@
 body{
     font-size: 1em;
+    overflow: auto !important;
 }
 header{
 
 }
-div{
+/* div{
     margin-bottom: 5px;
-    padding: 5px;
+    padding: 5px; */
     /* background-color: aliceblue; */
-}
+/* } */
 
 #myDiagramDiv{
     background-color: white;
-    border: 1px solid gray;
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    float:left; /* two div in a row*/
+    /* border: 1px solid gray; */
+    width: 1500px;
+    height: 1500px;
+    /* position: relative; */
+    position: absolute;
+    /* float:left; /* two div in a row*/
+    /* z-index: auto !important;
+    position: static !important; */
 }
 #inputEventsMsg{
-    width: 38.2%;
-    max-height: 550px;
-    border: 1px solid gray;
+    position: fixed;
+    /* width: auto; */
+    max-height: 100vh !important;
+    overflow-y:auto !important;
+    /* max-height: 100vh; */
+    /* border: 1px solid gray; */
     /* display: none; */
-    /* position: fixed;
+    /* position: fixed; */
     background-color: white !important;
-    right: 0;
-    z-index: 999;
-    overflow-y: auto;
-    height: 100vh; */
-    float:left; /* two div in a row*/
+    /* left: 0; */
+    /* z-index: 999 !important; */
 
+
+    /* float:left; /* two div in a row*/ */
+    text-align: center;
+    height: 100vh;
+    margin-left: 50%;
+    transform: translateX(-50%);
 }
+#inputEventsMsg > table {
+    /* width: auto; */
+    margin-right: 10px;
+    box-shadow: 5px 5px 5px gray;
+}
+/* @media only screen and (max-width: 767px)
+.ui.table:not(.unstackable) thead {
+    display: block;
+} */
 footer{
 
 }
-/* canvas{
-    margin-left: -224px;
-    width:58%
-} */
+canvas{
+    background-color: white;
+}
+a:hover{
+    cursor: pointer;
+}
+
+
+.loading {
+      background:url(loading.svg) center center no-repeat;
+      position: fixed;
+      top:0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 999;
+ }

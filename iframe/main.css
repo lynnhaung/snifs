@@ -9,93 +9,75 @@ body {
     padding: 0;
 }
 
-iframe {
-    width: calc(50% - 4px);
-    height: 100vh;
-    border-width: 0;
+
+.MainContainer{
+    margin: 0 10px 0 10px;
+    padding: 10px 0 10px 0;
+    justify-content: center;
+
 }
 
-iframe#snifs {
-    border-right: 1px solid grey;
+.frameBox{
+    width: 100%;
+    height: 90vh;
+    border: 1px solid #777;
+    border-radius: 5px;
 }
 
-iframe#discuss {
-    height: calc(100vh - 4rem);
-    margin-top: 4rem;
-}
-
-button {
+/* articles section */
+.popupArticle{
+    display: none;
+    top: 0;
+    left: 0;
+    padding: 2% 5% 5% 5%;
     position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+
     z-index: 10;
-    box-shadow: 3px 3px 2px #888888 !important;
 }
-
-#snifs_person {
-    left: 10px;
-    top: 10px;
+.article-content{
+    margin: auto;
+    padding: 30px;
+    border-radius: 5px;
+    width: 70%;
+    background-color: rgb(238, 238, 238);
+    color: #000;
+    justify-content: center;
 }
-
-#snifs_group {
-    left: 7rem;
-    top: 10px;
+.article-content .content{
+    font-size: 1.2em;
 }
-
-#article {
-    /* left:90%; */
-    right: 10px;
-    top: 10px;
-}
-
-#external_search {
-    position: fixed;
-    top: 10px;
-    left: calc(50% + 10px);
-}
-
-#external_search input {
-    width: calc(50vw - 10rem - 10px);
-}
-
-#article_content {
-    z-index: 30;
-    position: fixed;
-    visibility: hidden;
-    height: 50%;
-    width: 50%;
-    left: 12.5%;
-    top: 12.5%;
-}
-
-#article_page {
-    background-color: aliceblue;
-    height: 75vh;
-    width: 75vw;
-    visibility: hidden;
-}
-
-#header {
-    font-size: 35px;
-    font-weight: bold;
+#btnClose{
+    float: right;
+    width: 45px;
+    height: 45px;
+    background-color: #000;
+    border: 1px solid #000;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 2em;
     text-align: center;
-    align-content: center;
+
+    transition: 0.2s;
+}
+#btnClose:hover{
+    cursor: pointer;
+    box-shadow: 0 0 5px #000;
+}
+#external_search{
+    width: 300px;
+}
+.gsc-control-cse{
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+.gsc-search-box:hover{
+    cursor: pointer;
 }
 
-#subtitle_header{
-    font-size: 18px;
-    text-align: right;
-}
-
-#subtitle_picture{
-    font-size: 13px;
-    text-align: center;
-    align-content: center;
-}
-
-.content {
-    font-size: 25px;
-}
-
-#news_picture{
-    align-content: center;
-    text-align: center;
-}
+.holds-the-iframe {
+  background:url(loading.gif) center center no-repeat;
+ }

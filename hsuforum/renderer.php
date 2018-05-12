@@ -1305,8 +1305,10 @@ class mod_hsuforum_renderer extends plugin_renderer_base {
                     <input type="text" placeholder="$t->subjectplaceholder" name="subject" class="form-control" $subjectrequired spellcheck="true" value="$subject" maxlength="255" />
                 </label>
 
-                <textarea name="message" class="hidden"></textarea>
-                <div data-placeholder="$t->messageplaceholder" aria-label="$messagelabel" contenteditable="true" required="required" spellcheck="true" role="textbox" aria-multiline="true" class="textarea">$t->message</div>
+                <textarea name="message" class="hidden" ></textarea>
+                <div data-placeholder="$t->messageplaceholder" aria-label="$messagelabel" contenteditable="true" required="required" spellcheck="true" role="textbox" aria-multiline="true" class="textarea" id="test" onkeyup="countFunction()" onpaste="countFunction()" onmouseOut="countFunction()" style="word-break: break-all;">$t->message</div>
+                <!--討論文字框目前字數-->
+                <p id="count_text">目前字數：0/500</p>
 
                 $files
                 <label>
@@ -1316,9 +1318,23 @@ class mod_hsuforum_renderer extends plugin_renderer_base {
 
                 $t->extrahtml
 
-                <button type="submit">$t->submitlabel</button>
+                <button type="submit" id="textSubmit">$t->submitlabel</button>
                 <a href="#" class="hsuforum-cancel disable-router">$t->cancellabel</a>
-                <a href="$advancedurl" class="hsuforum-use-advanced disable-router">$t->advancedlabel</a>
+                <!-- <a href="$advancedurl" class="hsuforum-use-advanced disable-router">$t->advancedlabel</a> -->
+                <!--討論文字框字數限制-->
+                <script>
+                function countFunction() {
+                var x = document.getElementById("test").textContent.length;
+                document.getElementById("count_text").innerHTML = "目前字數："+x+"/500";
+
+                if(x>500){
+                    document.getElementById("textSubmit").disabled = true;
+                }else if(x<=500){
+                    document.getElementById("textSubmit").disabled = false;
+                }
+
+                }
+                </script>
             </div>
         </fieldset>
     </form>
@@ -1678,7 +1694,7 @@ class mod_hsuforum_article_renderer extends mod_hsuforum_renderer implements ren
         if (!empty($d->group)) {
             $group = " | $d->group";
         }
-        
+
         if (!empty($meta)) {
             $meta = '<p class="hsuforum-thread-replies-meta">'.$meta.'</p>';
         }
@@ -1705,7 +1721,7 @@ class mod_hsuforum_article_renderer extends mod_hsuforum_renderer implements ren
             </h4>
 
             $meta
-            
+
         </div>
     </header>
     <div class="hsuforum-thread-content" tabindex="0">
@@ -1720,7 +1736,7 @@ HTML;
     }
 
 
-    
+
     /**
      * Return html for individual post
      *
@@ -1730,7 +1746,7 @@ HTML;
      *  3. Private reply to user
      *
      * @param array $p
-     */    
+     */
     public function post_template($p) {
         $icon = "&#64;";
         $byuser = $p->fullname;
@@ -1754,7 +1770,7 @@ HTML;
          }
         // Post is private reply.
         if (!empty($p->privatereply)) {
-            
+
             $byline = get_string('postbyxinprivatereplytox', 'hsuforum', array(
                     'author' => $byuser,
                     'parent' => $parent
@@ -1766,7 +1782,7 @@ HTML;
         if ($p->unread) {
             $unread = html_writer::tag('span', get_string('unread', 'hsuforum'), array('class' => 'hsuforum-unreadcount'));
         }
-        
+
         return <<<HTML
 <div class="hsuforum-post-wrapper hsuforum-post-target" id="p$p->id" data-postid="$p->id" data-discussionid="$p->discussionid" data-author="$author" data-ispost="true">
     <div class="hsuforum-post-figure">
@@ -1783,7 +1799,9 @@ HTML;
             <strong class="hsuforum-post-title">$p->subject</strong>
             $p->message
         </div>
-        <time datetime="$p->datetime" class="hsuforum-post-pubdate"><a href="$p->permalink" class="disable-router">$p->created</a></time>
+        <time datetime="$p->datetime" class="hsuforum-post-pubdate">
+        $p->created
+        </time>
 
         $p->tools
     </div>

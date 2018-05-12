@@ -32,7 +32,7 @@ if (typeof(STAY_SAVE_MIN_INTERVAL) === "undefined") {
  * 加上DEBUG的設定，以方便未來開關
  * @type Boolean
  * @author Pudding 20170203
- */ 
+ */
 if (typeof(DEBUG) === "undefined") {
     DEBUG = true;
 }
@@ -55,22 +55,22 @@ if (false) {
  */
 window.ga_setup = function (_callback) {
 	_console_log("1. 在插入GA之前");
-	
+
     $.getScript("https://www.google-analytics.com/analytics.js", function () {
 		_console_log("2. 插入GA了");
-        
+
         var _user = get_user_id();
-        ga('create', GA_TRACE_CODE, {'userId': _user});  
+        ga('create', GA_TRACE_CODE, {'userId': _user});
         ga('send', 'pageview');
         ga('require', 'displayfeatures');
         ga('set', 'userId', _user); // 使用已登入的 user_id 設定 User-ID。
         ga('set', 'dimension1', _user);
-		
+
 		_console_log("3. GA設定了");
-        
+
         auto_set_user_id(function () {
 			_console_log("4. User ID設定好了");
-			
+
             /**
              * 初始化載入
              */
@@ -93,10 +93,10 @@ window.ga_setup = function (_callback) {
 
 /**
  * 取得使用者ID資料
- * 
+ *
  * 如果window.name沒有資料，則會回傳anonymous
  * 不然會回傳window.name的資料
- * 
+ *
  * @returns {window.name|window.get_user_id|DOMString|String}
  */
 var get_user_id = function(){
@@ -104,28 +104,28 @@ var get_user_id = function(){
 	if (typeof(_win.top) === "object") {
 		_win = _win.top;
 	}
-	
-    if (_win.name === null 
-            || _win.name === undefined 
+
+    if (_win.name === null
+            || _win.name === undefined
             || _win.name.trim() === ""){
       return "anonymous";
-    } 
+    }
     else {
         return _win.name;
-    }    
+    }
 };
 
 /**
  * 取得連線者IP資料
- * 
- * 
- * 
+ *
+ *
+ *
  */
 var get_user_ip = function(){
     $.getJSON('http://ipinfo.io', function(data){
         //console.log(data['ip']);
         _console_log("get user ip: " + data['ip']);
-        
+
         if(data !== null){
             return String(data['ip']);
         }else if(data === null){
@@ -136,21 +136,21 @@ var get_user_ip = function(){
 
 USER_IP = undefined;
 window.auto_set_user_id = function(_callback){
-	
+
 	_console_log("3.1. 開始 auto_set_user_id");
-	
+
     if (get_user_id() === "anonymous") {
 		_console_log("3.2. anonymous");
-		
+
         getJSONP('https://ipinfo.io', function(data){
 			_console_log("3.3. https://ipinfo.io");
-			
-			
+
+
             USER_IP = String(data['ip']);
-            set_user_id(USER_IP);    
+            set_user_id(USER_IP);
             _console_log("Set user id in ip: " + USER_IP);
             if (typeof(_callback) === "function") {
-				
+
 				_console_log("3.4. ok");
                 _callback();
             }
@@ -206,45 +206,51 @@ USER_TIMER = 0;
  * @param {String} _customUserId
  */
 window.set_user_id = function (_customUserId){
-    
+
     var date = new Date();
     var mm = date.getMonth() + 1; // getMonth() is zero-based
     var dd = date.getDate();
+    // var hh = date.getHours();
+    // var minutes = date.getMinutes();
+    // var ss = date.getSeconds();
 
     date = [date.getFullYear(),
             (mm>9 ? '' : '0') + mm,
             (dd>9 ? '' : '0') + dd
+            // (hh>9 ? '' : '0') + hh,
+            // (minutes>9 ? '' : '0') + minutes,
+            // (ss>9 ? '' : '0') + ss
            ].join('');
-    
+
     if (typeof(_customUserId) === "undefined") {
         _customUserId = get_user_id();
     }
     _customUserId = _customUserId.trim();
     _customUserId = _customUserId + "-" + date;
-    
+
     _console_log("Set user id: " + _customUserId);
-   
-   
+
+
     var _win = window;
 	if (typeof(_win.top) === "object") {
 		_win = _win.top;
 	}
-   
+
     if (_win.name !== _customUserId) {
         ga("send", "event", "end_exp", _win.name);
     }
-   
+
     _win.name = _customUserId;
-    
+
     ga('create', GA_TRACE_CODE, {'userId': _customUserId});
     ga('set', 'userId', _customUserId); // 使用已登入的 user_id 設定 User-ID。
-    ga('set', DIMENSION, _customUserId); 
-    
+    ga('set', DIMENSION, _customUserId);
+
     // 改用統一取得header的方式
     var _name_header = _get_element_name();
     ga("send", "event", "start_exp", _name_header);
     //set_user_timer();
-    
+
 };
 
 window.set_user_id_by_trigger = function (_trigger_selector, _user_id_getter) {
@@ -267,23 +273,23 @@ var set_user_timer = function () {
 window.fin_exp = function (){
     //var _time = (new Date()).getTime() - USER_TIMER;
     //_time = parseInt(_time / 1000, 10);
-    
+
 	var _hash = location.hash;
 	if (_hash !== "") {
 		_hash = "#" + _hash;
 	}
-	
+
     var _name = get_user_id() + ": " + _get_time() + ": " + window.location.pathname + window.location.search + _hash;
-	
+
 	var _win = window;
 	if (typeof(_win.top) === "object") {
 		_win = _win.top;
 	}
-	
+
     _win.name = '';
     //_console_log('end_exp: ' + _name + ", sec: " + _time);
     _console_log('end_exp: ' + _name);
-    
+
     ga("send", "event", "end_exp", _name);
     auto_set_user_id();
 };
@@ -305,9 +311,9 @@ window.ga_mouse_over_event = function (_selector, _event_type, _name) {
     var _event_key = 'mouse_over';
     $(_selector).mouseover(function () {
         var _name_data = _get_element_name($(this), _event_type, _name);
-        
+
         _console_log([_event_type, _name_data, _event_key]);
-        ga("send", "event", _event_type, _name_data, _event_key);   
+        ga("send", "event", _event_type, _name_data, _event_key);
     });
 };
 
@@ -324,11 +330,11 @@ window.ga_mouse_over_out_event = function(_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     if (_selector_length_caller(_selector, window.ga_mouse_over_out_event, _event_type, _name) === false) {
         return;
     }
-    
+
     var _id = GA_TIMER.length;
     GA_TIMER.push(false);
     var _event_key = "mouse_over_out";
@@ -340,7 +346,7 @@ window.ga_mouse_over_out_event = function(_selector, _event_type, _name) {
         GA_TIMER[_id] = (new Date()).getTime();
         _console_log([_event_type, _event_key + ": start", _name_data, GA_TIMER[_id]]);
     });
-    
+
     _obj.mouseout(function() {
         var _name_data = _get_element_name(_obj, _selector, _name);
         //_name_data = window.location.pathname + ": " + _name_data;
@@ -379,23 +385,23 @@ window.ga_mouse_drag_event = function(_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     if (_selector_length_caller(_selector, window.ga_mouse_drag_event, _event_type, _name) === false) {
         return;
     }
-    
+
     var _id = GA_TIMER.length;
     GA_TIMER.push(false);
     var _event_key = "drag";
     var _classname = _get_event_classname(_event_key, _event_type);
-    
+
     var _obj = $(_selector + ":not(." + _classname + ")");
     _obj.on("dragstart", function() {
         var _name_data = _get_element_name(_obj, _selector, _name);
         GA_TIMER[_id] = (new Date()).getTime();
         _console_log([_event_type, _event_key + ": start", _name_data, GA_TIMER[_id]]);
     });
-    
+
     _obj.on("dragend", function() {
         var _name_data = _get_element_name(_obj, _selector, _name);
         var _interval = (new Date()).getTime() - GA_TIMER[_id];
@@ -413,7 +419,7 @@ window.ga_mouse_drag_event = function(_selector, _event_type, _name) {
  * @param {String} _name GA other information
  */
 window.ga_mouse_click_event = function (_selector, _event_type, _name) {
-    
+
     try {
         if ($(_selector).length === 0) {
             setTimeout(function () {
@@ -425,10 +431,10 @@ window.ga_mouse_click_event = function (_selector, _event_type, _name) {
     catch (e) {
         console.log("ERROR SELECTOR: " + _selector);
     }
-    
+
     var _event_key = 'mouse_click';
     var _classname = _get_event_classname(_event_key, _event_type);
-    
+
     $(_selector + ":not(." + _classname + ")").click(function () {
         //var _name_data = _get_element_name(this, _selector, _name);
         //_console_log([_event_type, _name_data, _event_key]);
@@ -456,7 +462,7 @@ window.ga_mouse_down_event = function (_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     var _event_key = 'mouse_down';
     var _classname = _get_event_classname(_event_key, _event_type);
 
@@ -493,7 +499,7 @@ window.ga_mouse_touch_event = function (_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     var _event_key = 'touch';
     var _classname = _get_event_classname(_event_key, _event_type);
 
@@ -518,13 +524,13 @@ window.ga_input_change_event = function (_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     var _event_key = 'input_change';
     var _classname = _get_event_classname(_event_key, _event_type);
 
     $(_selector + ":not(." + _classname + ")").change(function () {
         var _input_name = $(this).attr("name");
-        var _name_data = _get_element_name(this, _selector, _input_name + "=" + $(this).val());    
+        var _name_data = _get_element_name(this, _selector, _input_name + "=" + $(this).val());
         _console_log([_event_type, _name_data, _event_key]);
         ga("send", "event", _event_type, _name_data, _event_key);
     }).addClass(_classname);
@@ -543,7 +549,7 @@ window.ga_input_keydown_enter_event = function (_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     var _event_key = 'input_keydown_enter';
     var _classname = _get_event_classname(_event_key, _event_type);
 
@@ -552,7 +558,7 @@ window.ga_input_keydown_enter_event = function (_selector, _event_type, _name) {
         if ($(this).prop("tagName").toLowerCase() === "input" && _e.keyCode === 13) {
             var _input_name = $(this).attr("name");
             var _name_data = _get_element_name(this, _selector, _input_name + "=" + $(this).val());
-            
+
             _console_log([_event_type, _name_data, _event_key]);
             ga("send", "event", _event_type, _name_data, _event_key);
         }
@@ -572,16 +578,16 @@ window.ga_submit_event = function (_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     if (_selector_length_caller(_selector, window.ga_submit_event, _event_type, _name) === false) {
         return;
     }
     var _event_key = "form_submit";
     var _classname = _get_event_classname(_event_key, _event_type);
-    
+
     var _obj = $(_selector);
     var _tag_name = _obj.prop("tagName").toLowerCase();
-    
+
     if (_tag_name !== "form") {
         var _form = _obj.parents("form:first");
         if (_form.length === 0) {
@@ -591,7 +597,7 @@ window.ga_submit_event = function (_selector, _event_type, _name) {
             _obj = _form;
         }
     }
-    
+
     window.DENY_SUBMIT = true;
     _obj.submit(function () {
         if (window.DENY_SUBMIT === false) {
@@ -610,14 +616,14 @@ window.ga_submit_event = function (_selector, _event_type, _name) {
                  _data[_name] = _value;
              }
             _name = JSON.stringify(_data).trim();
-            
+
             if (_name === "") {
                 _name = undefined;
             }
         }
-        
+
         var _name_data = _get_element_name(this, _selector, _name);
-        
+
         _console_log([_event_type, _name_data, _event_key]);
         ga("send", "event", _event_type, _name_data, _event_key);
         var _form = $(this);
@@ -629,7 +635,7 @@ window.ga_submit_event = function (_selector, _event_type, _name) {
             _form.submit();
         }, 1000);
         //return false ;
-    });        
+    });
 };
 
 
@@ -648,35 +654,35 @@ window.ga_mouse_scroll_in_out_event = function(_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     if (_selector_length_caller(_selector, window.ga_mouse_scroll_in_out_event, _event_type, _name) === false) {
         return;
     }
-    
+
     var _event_key = 'scroll_in_out';
     var _classname = _get_event_classname(_event_key, _event_type);
 
     var _id = GA_TIMER.length;
     GA_TIMER.push(false);
-    
+
     var _window = $(window);
-    
+
     // 捲動時偵測
     _window.scroll(function() {
         //console.log(["觸發", _selector]);
         var _obj = $(_selector);
         var _name_data = _get_element_name(_obj, _selector, _name);
-        
+
         var _obj_top = _obj.offset().top;
         var _obj_bottom = _obj_top + _obj.height();
         var _scroll_top_border = _window.scrollTop();
         var _scroll_bottom_border = _scroll_top_border + _window.height();
-        
+
         var _is_obj_under_scorll_top = (_obj_top > _scroll_top_border);
         var _is_obj_above_scorll_bottom = (_obj_bottom < _scroll_bottom_border);
-        
+
         var _is_obj_display_in_window = (_is_obj_under_scorll_top && _is_obj_above_scorll_bottom);
-        
+
         if (_is_obj_display_in_window === false && GA_TIMER[_id] === false) {
             // 沒事
         }
@@ -717,40 +723,40 @@ window.ga_mouse_scroll_in_event = function(_selector, _event_type, _name) {
         }, 1000);
         return;
     }
-    
+
     if (_selector_length_caller(_selector, window.ga_mouse_scroll_in_event, _event_type, _name) === false) {
         return;
     }
-    
+
     var _event_key = 'scroll_in_out';
     var _classname = _get_event_classname(_event_key, _event_type);
 
     var _id = GA_TIMER.length;
     GA_TIMER.push(false);
-    
+
     var _window = $(window);
-    
+
     var _check_is_obj_display_in_window = function (_obj) {
         var _obj_top = _obj.offset().top;
         var _obj_bottom = _obj_top + _obj.height();
         var _scroll_top_border = _window.scrollTop();
         var _scroll_bottom_border = _scroll_top_border + _window.height();
-        
+
         var _is_obj_under_scorll_top = (_obj_top > _scroll_top_border);
         var _is_obj_above_scorll_bottom = (_obj_bottom < _scroll_bottom_border);
-        
+
         var _is_obj_display_in_window = (_is_obj_under_scorll_top && _is_obj_above_scorll_bottom);
         return _is_obj_display_in_window;
     };
-    
+
     // 捲動時偵測
     _window.scroll(function() {
         //console.log(["觸發", _selector]);
         var _obj = $(_selector);
         var _name_data = _get_element_name(_obj, _selector, _name);
-        
+
         var _is_obj_display_in_window = _check_is_obj_display_in_window(_obj);
-        
+
         if (_is_obj_display_in_window === false && GA_TIMER[_id] === false) {
             // 沒事
         }
@@ -758,7 +764,7 @@ window.ga_mouse_scroll_in_event = function(_selector, _event_type, _name) {
             // 進入了，開始記錄事件
             GA_TIMER[_id] = (new Date()).getTime();
             _console_log([_event_type, _event_key + ": start", _name_data, GA_TIMER[_id]]);
-            
+
             setTimeout(function () {
                 if (_check_is_obj_display_in_window(_obj)) {
                     var _interval = parseInt(((new Date()).getTime() - GA_TIMER[_id])/1000, 10);
@@ -801,7 +807,7 @@ var _load_css = function (_css_url) {
         return;
     }
     else {
-        _css_url = _css_url.trim(); 
+        _css_url = _css_url.trim();
     }
     if (DEBUG === true){
         console.log("include CSS: " + _css_url);
@@ -828,25 +834,25 @@ if (typeof(CSS_URL) === "string") {
  * @param {String} _event_type
  * @param {String} _name
  * @returns {String|get_element_name._name}
- * 
- * window.location.pathname + ": " + 
+ *
+ * window.location.pathname + ": " +
  */
 var _get_element_name = function (_ele, _event_type, _name) {
-    
+
 	var _hash = location.hash;
 	if (_hash !== "") {
 		_hash = "#" + _hash;
 	}
-	
+
     var _name_header = get_user_id() + ": " + USER_IP + ": " + _get_time() + ": " + window.location.pathname + window.location.search + _hash;
-    
+
     if (_ele !== undefined) {
         _name_header = _name_header + ": ";
     }
     else {
         return _name_header;
     }
-    
+
     _ele = $(_ele);
     if (typeof(_name) === "string") {
         return _name_header + _name;
@@ -854,16 +860,16 @@ var _get_element_name = function (_ele, _event_type, _name) {
     else if (typeof(_name) === "function") {
         return _name_header + _name(_ele);
     }
-    
+
     try {
         if(_ele.attr("title")){
           _name = _ele.attr("title");
         } else if (_ele.text()) {
-          _name = _ele.text(); 
+          _name = _ele.text();
         } else if (_ele.attr("alt")){
           _name = _ele.attr("alt");
         } else if (_ele.attr("src")){
-          _name = _ele.attr("src"); 
+          _name = _ele.attr("src");
         } else if (_ele.attr("data-src")){
           _name = _ele.attr("data-src");
         } else if (_ele.attr("className")){
@@ -876,14 +882,14 @@ var _get_element_name = function (_ele, _event_type, _name) {
 
     if (typeof(_name) === "string") {
         _name = _name.trim();
-        
+
         while (_name.indexOf("  ") > -1) {
             _name = _name.split("  ").join(" ");
         }
     }
-    
+
     _name = _name_header + _name;
-    
+
     return _name;
 };
 
@@ -922,7 +928,7 @@ var _console_log = function (_message) {
             _message = _message.join(", ");
         }
         CONSOLE_LOG.push(_message);
-        
+
         setTimeout(function () {
             if (CONSOLE_LOG.length > 0) {
                 var _m = CONSOLE_LOG.join("\n");
@@ -940,7 +946,7 @@ window.ga_display_timer = function (_style) {
     if ($("#ga_display_timer").length > 0) {
         return;
     }
-    
+
     var _timer = $('<div id="ga_display_timer"></div>').appendTo('body');
     _timer.css({
         "position": "fixed",
@@ -954,7 +960,7 @@ window.ga_display_timer = function (_style) {
         "padding": "1px",
         "line-height": "12px"
     });
-    
+
     if (_style === undefined || _style === 9) {
         _timer.css({
             "top": 0,
@@ -983,7 +989,7 @@ window.ga_display_timer = function (_style) {
             "border-radius": "0 5px 0 0"
         });
     }
-    
+
     setInterval(function () {
         var d = new Date;
         d = [
@@ -1003,11 +1009,11 @@ window.enable_screen_recorder_link = function () {
 };
 
 window.enable_screen_recorder = function () {
-    
+
     if ($("#screen_recorder").length > 0) {
         return;
     }
-    
+
     var _screen_recorder = $('<div id="screen_recorder" class="start-screen-recording-big"><div><div class="rec-dot"></div><span>網頁錄影開始</span></div></div>');
     _screen_recorder.css({
         "position": "fixed",
@@ -1021,7 +1027,7 @@ window.enable_screen_recorder = function () {
     });
     _screen_recorder.hide();
     _screen_recorder.appendTo($("body"));
-    
+
     $.getScript("//api.apowersoft.com/screen-recorder?lang=tw", function () {
         $("body").keydown(function (_e) {
             if (_e.keyCode === 82) {
@@ -1042,7 +1048,7 @@ window.getCookie = function(cname) {
 	catch (e) {
 		decodedCookie = document.cookie;
 	}
-		
+
 	var ca = decodedCookie.split(';');
 	for(var i = 0; i <ca.length; i++) {
 		var c = ca[i];
